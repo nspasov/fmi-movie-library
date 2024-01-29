@@ -7,7 +7,7 @@ const ReturnMovie: React.FC<{ movie: MovieModel }> = (props) => {
                 {props.movie.img ?
                     <img src={props.movie.img} width='151' height='233' alt="movie" />
                     :
-                    <img src={require('./../../../Images/BooksImages/book-luv2code-1000.png')} width='151' height='233' alt="movie" />
+                    <img src={require('./../../../Images/MoviesImages/book-luv2code-1000.png')} width='151' height='233' alt="movie" />
                 }
 
                 <h6 className="mt-2">{props.movie.title}</h6>

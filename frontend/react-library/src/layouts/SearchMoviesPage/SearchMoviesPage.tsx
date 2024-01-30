@@ -12,11 +12,19 @@ export const SearchMoviesPage = () => {
     const [moviesPerPage, setMoviesPerPage] = useState(1);
     const [totalAmount, setTotalAmount] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
+    const [search, setSearch] = useState('');
+    const [searchUrl, setSearchUrl] = useState('');
 
     useEffect(() => {
         const fetchMovies = async () => {
             const baseUrl: string = "http://localhost:8080/api/movies";
-            const url = `${baseUrl}?page=${currentPage-1}&size=${moviesPerPage}`;
+            let url = '';
+
+            if(searchUrl === ''){
+                url = `${baseUrl}?page=${currentPage-1}&size=${moviesPerPage}`;
+            }else{
+                url = baseUrl.concat(searchUrl);
+            }
 
             const response = await fetch(url);
 
@@ -56,7 +64,7 @@ export const SearchMoviesPage = () => {
             setHttpError(err.message);
         });
         window.scrollTo(0,0);
-    }, [currentPage]);
+    }, [currentPage, searchUrl]);
 
     if (isLoading) {
         return (
@@ -72,6 +80,14 @@ export const SearchMoviesPage = () => {
         );
     }
 
+    const searchHandleChange = () => {
+        if(search === ''){
+            setSearchUrl('');
+        } else {
+            setSearchUrl(`/search/findByTitleContaining?title=${search}&page=0&size=${moviesPerPage}`);
+        }
+    };
+
     const lastMovieIndex: number = currentPage * moviesPerPage;
     const firstMovieIndex: number = lastMovieIndex - moviesPerPage;
     let lastItem = moviesPerPage * currentPage <= totalAmount ? moviesPerPage * currentPage : totalAmount;
@@ -85,8 +101,9 @@ export const SearchMoviesPage = () => {
                     <div className="row mt-5">
                         <div className="col-6">
                             <div className="d-flex">
-                                <input className="form-control me-2" type="search" placeholder="search" aria-label="search" />
-                                <button className="btn btn-outline-success">
+                                <input className="form-control me-2" type="search" placeholder="search" aria-label="search" 
+                                onChange={e => setSearch(e.target.value)}/>
+                                <button className="btn btn-outline-success" onClick={searchHandleChange}>
                                     Search
                                 </button>
                             </div>

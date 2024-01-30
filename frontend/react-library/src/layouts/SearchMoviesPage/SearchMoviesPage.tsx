@@ -14,6 +14,7 @@ export const SearchMoviesPage = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [search, setSearch] = useState('');
     const [searchUrl, setSearchUrl] = useState('');
+    const [categorySelection, setCategorySelection] = useState('Movie category');
 
     useEffect(() => {
         const fetchMovies = async () => {
@@ -88,6 +89,21 @@ export const SearchMoviesPage = () => {
         }
     };
 
+    const categoryField = (value: string) => {
+        if(
+            value.toLowerCase() === 'comedy' ||
+            value.toLowerCase() === 'action' ||
+            value.toLowerCase() === 'horror' ||
+            value.toLowerCase() === 'romance' 
+        ){
+            setCategorySelection(value);
+            setSearchUrl(`/search/findByCategory?category=${value}&page=0&size=${moviesPerPage}`);
+        }else{
+            setCategorySelection('All');
+            setSearchUrl(`?page=0&size=${moviesPerPage}`);
+        }
+    }
+
     const lastMovieIndex: number = currentPage * moviesPerPage;
     const firstMovieIndex: number = lastMovieIndex - moviesPerPage;
     let lastItem = moviesPerPage * currentPage <= totalAmount ? moviesPerPage * currentPage : totalAmount;
@@ -111,22 +127,22 @@ export const SearchMoviesPage = () => {
                         <div className="col-4">
                             <div className="dropdown">
                                 <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Category
+                                    {categorySelection}
                                 </button>
                                 <ul className="dropdown-menu" aria-label="dropdownMenuButton1">
-                                    <li>
+                                    <li onClick={() => {categoryField('All')}}>
                                         <a className="dropdown-item" href="#">All</a>
                                     </li>
-                                    <li>
+                                    <li onClick={() => {categoryField('Comedy')}}>
                                         <a className="dropdown-item" href="#">Comedy</a>
                                     </li>
-                                    <li>
+                                    <li onClick={() => {categoryField('Action')}}>
                                         <a className="dropdown-item" href="#">Action</a>
                                     </li>
-                                    <li>
+                                    <li onClick={() => {categoryField('Horror')}}>
                                         <a className="dropdown-item" href="#">Horror</a>
                                     </li>
-                                    <li>
+                                    <li onClick={() => {categoryField('Romance')}}>
                                         <a className="dropdown-item" href="#">Romance</a>
                                     </li>
                                 </ul>

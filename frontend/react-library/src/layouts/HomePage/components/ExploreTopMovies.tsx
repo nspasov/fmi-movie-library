@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function ExploreTopMovies() {
     return (
         <div className="p-5 mb-4 bg-dark header">
@@ -5,7 +7,7 @@ export default function ExploreTopMovies() {
                 <div>
                     <h1 className="display-5 fw-bold">Find next adventure</h1>
                     <p className="col-md-8 fs-4">What next?</p>
-                    <a type='button' className="btn main-color btn-lg text-white" href='#'>Explore Movies</a>
+                    <Link type='button' className="btn main-color btn-lg text-white" to='/search'>Explore Movies</Link>
                 </div>
             </div>
         </div>

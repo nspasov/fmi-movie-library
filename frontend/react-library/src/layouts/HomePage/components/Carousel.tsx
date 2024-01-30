@@ -2,6 +2,7 @@ import ReturnMovie from "./ReturnMovie";
 import { useEffect, useState } from "react";
 import MovieModel from "../../../models/MovieModel";
 import { LoadingSpinner } from "../../Utils/LoadingSpinner";
+import { Link } from "react-router-dom";
 
 export default function Carousel() {
 
@@ -110,7 +111,7 @@ export default function Carousel() {
                 </div>
             </div>
             <div className="homepage-carousel-title mt-3">
-                <a className="btn btn-outline-secondary btn-lg" href="#">View more</a>
+                <Link className="btn btn-outline-secondary btn-lg" to="/search">View more</Link>
             </div>
         </div>
     );

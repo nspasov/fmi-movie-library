@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import MovieModel from "../../../models/MovieModel";
 
 export const SearchMovie: React.FC<{ movie: MovieModel }> = (props) => {
@@ -34,9 +35,9 @@ export const SearchMovie: React.FC<{ movie: MovieModel }> = (props) => {
                     </div>
                 </div>
                 <div className="col-md-4 d-flex justify-content-center align-items-center">
-                    <a className="btn btn-md main-color text-white" href="#">
+                    <Link className="btn btn-md main-color text-white" to={`/checkout/${props.movie.id}`}>
                         View Details
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>

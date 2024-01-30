@@ -4,7 +4,7 @@ export default function Navbar() {
     return (
         <nav className='navbar navbar-expand-lg navbar-dark main-color py-3'>
             <div className='container-fluid'>
-                <span className='navbar-brand'>FMI MOVIES</span>
+                <NavLink className='navbar-brand' to='/'>FMI MOVIES</NavLink>
                 <button
                     className='navbar-toggler'
                     type='button'

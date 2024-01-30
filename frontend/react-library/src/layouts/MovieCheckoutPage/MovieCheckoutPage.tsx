@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import MovieModel from "../../models/MovieModel";
 import { LoadingSpinner } from "../Utils/LoadingSpinner";
+import { StarsReview } from "../Utils/StarsReview";
+import { CheckoutAndReviewBox } from "./CheckoutAndReview";
 
 export const MovieCheckoutPage = () => {
 
@@ -78,8 +80,10 @@ export const MovieCheckoutPage = () => {
                             <h2>{movie?.title}</h2>
                             <h5 className="text-primary">{movie?.director}</h5>
                             <p className="lead">{movie?.description}</p>
+                            <StarsReview rating={4} size={32}/>
                         </div>
                     </div>
+                    <CheckoutAndReviewBox movie={movie} mobile={false} />
                 </div>
                 <hr></hr>
             </div>
@@ -96,8 +100,10 @@ export const MovieCheckoutPage = () => {
                         <h2>{movie?.title}</h2>
                         <h5 className="text-primary">{movie?.director}</h5>
                         <p className="lead">{movie?.description}</p>
+                        <StarsReview rating={4} size={32}/>
                     </div>
                 </div>
+                <CheckoutAndReviewBox movie={movie} mobile={true} />
                 <hr></hr>
             </div>
         </div>

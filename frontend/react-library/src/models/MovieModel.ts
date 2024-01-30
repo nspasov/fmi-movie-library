@@ -15,7 +15,7 @@ class MovieModel {
     description: string,
     copies: number,
     copiesAvailable: number,
-    category: number,
+    category: string,
     img: string
   ) {
     this.id = id;
@@ -24,6 +24,7 @@ class MovieModel {
     this.description = description;
     this.copies = copies;
     this.copiesAvailable = copiesAvailable;
+    this.category = category;
     this.img = img;
   }
 }

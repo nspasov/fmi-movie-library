@@ -10,4 +10,5 @@ import org.springframework.data.domain.Pageable;
 // creates REST routes
 public interface MovieRepository extends JpaRepository<Movie, Long> {
     Page<Movie> findByTitleContaining(@RequestParam("title") String title, Pageable pageable);
+    Page<Movie> findByCategory(@RequestParam("category") String category, Pageable pageable);
 }

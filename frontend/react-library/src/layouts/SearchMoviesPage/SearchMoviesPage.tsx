@@ -20,9 +20,9 @@ export const SearchMoviesPage = () => {
             const baseUrl: string = "http://localhost:8080/api/movies";
             let url = '';
 
-            if(searchUrl === ''){
-                url = `${baseUrl}?page=${currentPage-1}&size=${moviesPerPage}`;
-            }else{
+            if (searchUrl === '') {
+                url = `${baseUrl}?page=${currentPage - 1}&size=${moviesPerPage}`;
+            } else {
                 url = baseUrl.concat(searchUrl);
             }
 
@@ -63,7 +63,7 @@ export const SearchMoviesPage = () => {
             setIsLoading(false);
             setHttpError(err.message);
         });
-        window.scrollTo(0,0);
+        window.scrollTo(0, 0);
     }, [currentPage, searchUrl]);
 
     if (isLoading) {
@@ -81,7 +81,7 @@ export const SearchMoviesPage = () => {
     }
 
     const searchHandleChange = () => {
-        if(search === ''){
+        if (search === '') {
             setSearchUrl('');
         } else {
             setSearchUrl(`/search/findByTitleContaining?title=${search}&page=0&size=${moviesPerPage}`);
@@ -101,8 +101,8 @@ export const SearchMoviesPage = () => {
                     <div className="row mt-5">
                         <div className="col-6">
                             <div className="d-flex">
-                                <input className="form-control me-2" type="search" placeholder="search" aria-label="search" 
-                                onChange={e => setSearch(e.target.value)}/>
+                                <input className="form-control me-2" type="search" placeholder="search" aria-label="search"
+                                    onChange={e => setSearch(e.target.value)} />
                                 <button className="btn btn-outline-success" onClick={searchHandleChange}>
                                     Search
                                 </button>
@@ -133,16 +133,27 @@ export const SearchMoviesPage = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="mt-3">
-                        <h5>Number of results: {totalAmount}</h5>
-                    </div>
-                    <p>
-                        {firstMovieIndex} to {lastItem} of {totalAmount} items:
-                    </p>
-                    {movies.map(movie => (
-                        <SearchMovie movie={movie} key={movie.id} />
-                    ))}
-                    {totalPages > 1 && 
+                    {totalAmount > 0 ? <>
+                        <div className="mt-3">
+                            <h5>Number of results: {totalAmount}</h5>
+                        </div>
+                        <p>
+                            {firstMovieIndex + 1} to {lastItem} of {totalAmount} items:
+                        </p>
+                        {movies.map(movie => (
+                            <SearchMovie movie={movie} key={movie.id} />
+                        ))}
+                    </>
+                        :
+                        <div className="m-5">
+                            <h3>Can't find what you are looking for?</h3>
+                            <a type="button" className="btn main-color btn-md px-4 me-md-2 fw-bold text-white" href="#">
+                                Services
+                            </a>
+                        </div>
+                    }
+
+                    {totalPages > 1 &&
                         <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
                     }
                 </div>

@@ -5,6 +5,7 @@ import Footer from './layouts/NavbarAndFooter/Footer';
 import HomePage from './layouts/HomePage/HomePage';
 import { SearchMoviesPage } from './layouts/SearchMoviesPage/SearchMoviesPage';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import { MovieCheckoutPage } from './layouts/MovieCheckoutPage/MovieCheckoutPage';
 
 export default function App() {
   return (
@@ -20,6 +21,9 @@ export default function App() {
           </Route>
           <Route path='/search'>
             <SearchMoviesPage />
+          </Route>
+          <Route path='/checkout/:movieId'>
+            <MovieCheckoutPage/>
           </Route>
         </Switch>
       </div>

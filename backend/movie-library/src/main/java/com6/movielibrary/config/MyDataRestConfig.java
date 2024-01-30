@@ -1,6 +1,7 @@
 package com6.movielibrary.config;
 
 import com6.movielibrary.entity.Movie;
+import com6.movielibrary.entity.Review;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
@@ -23,6 +24,9 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
 
         config.exposeIdsFor(Movie.class);
         disableHttpMethods(Movie.class, config, unsupportedActions);
+
+        config.exposeIdsFor(Review.class);
+        disableHttpMethods(Review.class, config, unsupportedActions);
 
         // CONFIGURE CORS MAPPING
         cors.addMapping(config.getBasePath() + "/**")

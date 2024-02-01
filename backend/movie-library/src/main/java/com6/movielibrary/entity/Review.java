@@ -30,5 +30,25 @@ public class Review {
     @Column(name = "review_description")
     private String reviewDescription;
 
+    public void setMovieId(Long movieId){
+        this.movieId = movieId;
+    }
+
+    public void setRating(double rating){
+        this.rating = rating;
+    }
+
+    public void setUserEmail(String userEmail){
+        this.userEmail = userEmail;
+    }
+
+    public void setReviewDescription(String reviewDescription){
+        this.reviewDescription = reviewDescription;
+    }
+
+    public void setDate(Date date){
+        this.date = date;
+    }
+
 
 }

@@ -1,13 +1,30 @@
 import { Link } from "react-router-dom";
 import MovieModel from "../../models/MovieModel";
 
-export const CheckoutAndReviewBox: React.FC<{ movie: MovieModel | undefined, mobile: boolean }> = (props) => {
+export const CheckoutAndReviewBox: React.FC<{ movie: MovieModel | undefined, mobile: boolean, currentLoansCount: number, isAuthenticated: any, isCheckedOut: boolean, checkoutMovie: any }> = (props) => {
+    
+    function buttonRender() {
+        if(props.isAuthenticated) {
+            if(!props.isCheckedOut && props.currentLoansCount < 5){
+                return (<button onClick={() => props.checkoutMovie()} className="btn btn-success btn-lg">Checkout</button>);
+            }else if(props.isCheckedOut) {
+                return (<p><b>Movie checked out, enjoy!</b></p>);
+            } else if(!props.isCheckedOut) {
+                return (<p className="text-danger">Too many movies checked out!</p>)
+            }
+        }
+
+        return (<Link to={'/login'} className="btn btn-success btn">Login</Link>);
+    }
+
+
+
     return (
         <div className={props.mobile ? 'card d-flex mt-5' : 'card col-3 container d-flex mb-5'}>
             <div className="card-body container">
                 <div className="mt-3">
                     <p>
-                        <b>0/5 </b>
+                        <b>{props.currentLoansCount}/5 </b>
                         movies checked out
                     </p>
                     <hr></hr>
@@ -27,7 +44,7 @@ export const CheckoutAndReviewBox: React.FC<{ movie: MovieModel | undefined, mob
                         </p>
                     </div>
                 </div>
-                <Link to='/#' className="btn btn-success btn-lg">Sign In</Link>
+                {buttonRender()}
                 <hr></hr>
                 <p className="mt-3">
                     Number might change before placing order

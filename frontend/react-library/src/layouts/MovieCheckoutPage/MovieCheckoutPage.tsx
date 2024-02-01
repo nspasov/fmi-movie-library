@@ -2,11 +2,15 @@ import { useState, useEffect } from "react";
 import MovieModel from "../../models/MovieModel";
 import { LoadingSpinner } from "../Utils/LoadingSpinner";
 import { StarsReview } from "../Utils/StarsReview";
-import { CheckoutAndReviewBox } from "./CheckoutAndReview";
+import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
 import ReviewModel from "../../models/ReviewModel";
 import { LatestReviews } from "./LatestReviews";
+import { useOktaAuth } from "@okta/okta-react";
+import { findAllByText } from "@testing-library/react";
 
 export const MovieCheckoutPage = () => {
+
+    const {authState} = useOktaAuth();
 
     const [movie, setMovie] = useState<MovieModel>();
     const [isLoading, setIsLoading] = useState(true);
@@ -15,6 +19,12 @@ export const MovieCheckoutPage = () => {
     const [reviews, setReviews] = useState<ReviewModel[]>([]);
     const [totalStars, setTotalStars] = useState(0);
     const [isLoadingReviews, setIsLoadingReviews] = useState(true);
+
+    const [currentLoansCount, setCurrentLoansCount] = useState(0);
+    const [isLoadingCurrentLoansCount, setIsLoadingCurrentLoansCount] = useState(true);
+
+    const [isCheckedOut, setIsCheckedOut] = useState(false);
+    const [isLoadingMovieCheckedOut, setIsLoadingMovieCheckedOut] = useState(true);
 
     const movieId = (window.location.pathname).split('/')[2];
 
@@ -54,7 +64,7 @@ export const MovieCheckoutPage = () => {
             setIsLoading(false);
             setHttpError(err.message);
         });
-    }, []);
+    }, [isCheckedOut]);
 
     useEffect(() => {
         const fetchMovieReviews = async () => {
@@ -94,7 +104,69 @@ export const MovieCheckoutPage = () => {
         });
     }, []);
 
-    if (isLoading || isLoadingReviews) {
+    useEffect(() => {
+        const fetchUserCurrentLoansCount = async () => {
+            if(authState && authState.isAuthenticated) {
+                const url = `http://localhost:8080/api/movies/secure/currentLoans/count`;
+                const requestOptions = {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+
+                const currentLoansCountResponse = await fetch(url, requestOptions);
+
+                if(!currentLoansCountResponse.ok) {
+                    throw new Error('Something went wrong!');
+                }
+
+                const currentLoansCountResponseJson = await currentLoansCountResponse.json();
+                setCurrentLoansCount(currentLoansCountResponseJson);
+            }
+
+            setIsLoadingCurrentLoansCount(false);
+        }
+
+        fetchUserCurrentLoansCount().catch((err: any) => {
+            setIsLoadingCurrentLoansCount(false);
+            setHttpError(err.message);
+        });
+
+    }, [authState]);
+
+    useEffect(() =>{
+        const fetchUserCheckedOutMovie = async () => {
+            if(authState && authState.isAuthenticated){
+                const url = `http://localhost:8080/api/movies/secure/ischeckedout/byuser/?movieId=${movieId}`;
+                const requestOptions = {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                };
+
+                const movieCheckedOut = await fetch(url, requestOptions);
+
+                if(!movieCheckedOut.ok){
+                    throw new Error('Something went wrong');
+                }
+
+                const movieCheckedOutResponseJson = await movieCheckedOut.json();
+                setIsCheckedOut(movieCheckedOutResponseJson);
+            }
+            setIsLoadingMovieCheckedOut(false);
+        }
+
+        fetchUserCheckedOutMovie().catch((err: any) => {
+            setIsLoadingMovieCheckedOut(false);
+            setHttpError(err.message);
+        });
+    }, [authState, isCheckedOut]);
+
+    if (isLoading || isLoadingReviews || isLoadingCurrentLoansCount || isLoadingMovieCheckedOut) {
         return (
             <LoadingSpinner />
         );
@@ -106,6 +178,25 @@ export const MovieCheckoutPage = () => {
                 <p>{httpError}</p>
             </div>
         );
+    }
+
+    async function checkoutMovie() {
+        const url = `http://localhost:8080/api/movies/secure/checkout/?movieId=${movie?.id}`;
+        
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        };
+        const checkoutResponse = await fetch(url, requestOptions);
+
+        if(!checkoutResponse.ok){
+            throw new Error('Something went wrong!');
+        }
+
+        setIsCheckedOut(true);
     }
 
     return (
@@ -127,7 +218,7 @@ export const MovieCheckoutPage = () => {
                             <StarsReview rating={totalStars} size={32}/>
                         </div>
                     </div>
-                    <CheckoutAndReviewBox movie={movie} mobile={false} />
+                    <CheckoutAndReviewBox movie={movie} mobile={false} currentLoansCount={currentLoansCount} isAuthenticated={authState?.isAuthenticated} isCheckedOut={isCheckedOut} checkoutMovie={checkoutMovie}/>
                 </div>
                 <hr></hr>
                 <LatestReviews reviews={reviews} movieId={movie?.id} mobile={false} />
@@ -148,7 +239,7 @@ export const MovieCheckoutPage = () => {
                         <StarsReview rating={totalStars} size={32}/>
                     </div>
                 </div>
-                <CheckoutAndReviewBox movie={movie} mobile={true} />
+                <CheckoutAndReviewBox movie={movie} mobile={true} currentLoansCount={currentLoansCount} isAuthenticated={authState?.isAuthenticated} isCheckedOut={isCheckedOut} checkoutMovie={checkoutMovie}/>
                 <hr></hr>
                 <LatestReviews reviews={reviews} movieId={movie?.id} mobile={true} />
             </div>

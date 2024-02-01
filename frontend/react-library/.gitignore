@@ -24,3 +24,4 @@ yarn-error.log*
 
 #GIT TOKEN
 token.txt
+application.properties

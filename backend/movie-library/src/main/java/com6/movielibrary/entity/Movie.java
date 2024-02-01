@@ -25,5 +25,16 @@ public class Movie {
     @Column(name = "img")
     private String img;
 
+    public int getCopiesAvailable(){
+        return this.copiesAvailable;
+    }
+
+    public long getId(){
+        return this.id;
+    }
+
+    public int setCopiesAvailable(int copiesAvailable){
+        return this.copiesAvailable = copiesAvailable;
+    }
 
 }

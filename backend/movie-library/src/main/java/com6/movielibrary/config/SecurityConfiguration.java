@@ -18,7 +18,8 @@ public class SecurityConfiguration {
         http.csrf().disable();
 
         http.authorizeRequests(configurer ->
-                configurer.antMatchers("/api/movies/secure/**")
+                configurer.antMatchers("/api/movies/secure/**",
+                                "/api/reviews/secure/**")
                         .authenticated())
                 .oauth2ResourceServer()
                 .jwt();

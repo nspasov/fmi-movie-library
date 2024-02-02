@@ -37,6 +37,11 @@ export default function Navbar() {
                         <li className='nav-item'>
                             <NavLink className='nav-link' to='/search'>Search Movies</NavLink>
                         </li>
+                        {authState.isAuthenticated && 
+                            <li className="nav-item">
+                                <NavLink className="nav-link" to="/shelf">Shelf</NavLink>
+                            </li>
+                        }
                     </ul>
                     <ul className='navbar-nav ms-auto'>
                         {!authState.isAuthenticated ?

@@ -34,4 +34,12 @@ public class Checkout {
 
     @Column(name = "movie_id")
     private Long movieId;
+
+    public Long getMovieId (){
+        return this.id;
+    }
+
+    public String getReturnDate(){
+        return this.returnDate;
+    }
 }

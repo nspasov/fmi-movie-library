@@ -1,9 +1,12 @@
 package com6.movielibrary.controller;
 
 import com6.movielibrary.entity.Movie;
+import com6.movielibrary.responsemodels.ShelfCurrentLoansResponse;
 import com6.movielibrary.service.MovieService;
 import com6.movielibrary.utils.ExtractJWT;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -16,8 +19,14 @@ public class MovieController {
         this.movieService = movieService;
     }
 
+    @GetMapping("/secure/currentLoans")
+    public List<ShelfCurrentLoansResponse> currentLoans(@RequestHeader(value = "Authorization") String token) throws Exception{
+        String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
+        return movieService.currentLoans(userEmail);
+    }
+
     @GetMapping("/secure/currentLoans/count")
-    public int currentLoans(@RequestHeader(value = "Authorization") String token){
+    public int currentLoansCount(@RequestHeader(value = "Authorization") String token){
         String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
         return movieService.currentLoansCount(userEmail);
     }

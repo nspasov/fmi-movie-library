@@ -4,11 +4,18 @@ import com6.movielibrary.dao.CheckoutRepository;
 import com6.movielibrary.dao.MovieRepository;
 import com6.movielibrary.entity.Checkout;
 import com6.movielibrary.entity.Movie;
+import com6.movielibrary.responsemodels.ShelfCurrentLoansResponse;
+import org.hibernate.annotations.Check;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -67,9 +74,38 @@ public class MovieService {
         return checkoutRepository.findMoviesByUserEmail(userEmail).size();
     }
 
+    public List<ShelfCurrentLoansResponse> currentLoans(String userEmail) throws Exception {
+        List<ShelfCurrentLoansResponse> shelfCurrentLoansResponses = new ArrayList<>();
 
+        List<Checkout> checkoutList = checkoutRepository.findMoviesByUserEmail(userEmail);
+        List<Long> movieIdList = new ArrayList<>();
 
+        for(Checkout i: checkoutList){
+            movieIdList.add(i.getMovieId());
+        }
 
+        List<Movie> movies = movieRepository.findMoviesByMovieIds(movieIdList);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        for (Movie movie : movies) {
+            Optional<Checkout> checkout = checkoutList.stream()
+                    .filter(x -> x.getMovieId() == movie.getId()).findFirst();
+
+            if(checkout.isPresent()){
+                Date d1 = sdf.parse(checkout.get().getReturnDate());
+                Date d2 = sdf.parse(LocalDate.now().toString());
+
+                TimeUnit time = TimeUnit.DAYS;
+
+                long differenceInTime = time.convert(d1.getTime() - d2.getTime(), TimeUnit.MILLISECONDS);
+
+                shelfCurrentLoansResponses.add(new ShelfCurrentLoansResponse(movie, (int) differenceInTime));
+            }
+        }
+
+        return shelfCurrentLoansResponses;
+    }
 
 
 }

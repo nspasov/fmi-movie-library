@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import MovieModel from "../../models/MovieModel";
+import { LeaveAReview } from "../Utils/LeaveAReview";
 
-export const CheckoutAndReviewBox: React.FC<{ movie: MovieModel | undefined, mobile: boolean, currentLoansCount: number, isAuthenticated: any, isCheckedOut: boolean, checkoutMovie: any }> = (props) => {
+export const CheckoutAndReviewBox: React.FC<{ movie: MovieModel | undefined, mobile: boolean, currentLoansCount: number, isAuthenticated: any, isCheckedOut: boolean, checkoutMovie: any, isReviewLeft: boolean, submitReview: any }> = (props) => {
     
     function buttonRender() {
         if(props.isAuthenticated) {
@@ -17,7 +18,14 @@ export const CheckoutAndReviewBox: React.FC<{ movie: MovieModel | undefined, mob
         return (<Link to={'/login'} className="btn btn-success btn">Login</Link>);
     }
 
-
+    function reviewRender() {
+        if(props.isAuthenticated && !props.isReviewLeft){
+            return(<LeaveAReview submitReview={props.submitReview}/>);
+        }else if(props.isAuthenticated && props.isReviewLeft){
+            return (<p><b>Thank you for the review!</b></p>);
+        }
+        return (<div><hr/><p>Sign in to leave a review</p></div>)
+    }
 
     return (
         <div className={props.mobile ? 'card d-flex mt-5' : 'card col-3 container d-flex mb-5'}>
@@ -46,12 +54,10 @@ export const CheckoutAndReviewBox: React.FC<{ movie: MovieModel | undefined, mob
                 </div>
                 {buttonRender()}
                 <hr></hr>
-                <p className="mt-3">
+                {/* <p className="mt-3">
                     Number might change before placing order
-                </p>
-                <p>
-                    Sign in to leave a review
-                </p>
+                </p> */}
+                {reviewRender()}
             </div>
         </div>
     );

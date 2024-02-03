@@ -45,4 +45,35 @@ public class Movie {
         return this.copiesAvailable = copiesAvailable;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getCopies() {
+        return copies;
+    }
+
+    public void setCopies(int copies) {
+        this.copies = copies;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 }

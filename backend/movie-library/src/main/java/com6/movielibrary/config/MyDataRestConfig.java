@@ -1,5 +1,6 @@
 package com6.movielibrary.config;
 
+import com6.movielibrary.entity.Message;
 import com6.movielibrary.entity.Movie;
 import com6.movielibrary.entity.Review;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,9 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
 
         config.exposeIdsFor(Review.class);
         disableHttpMethods(Review.class, config, unsupportedActions);
+
+        config.exposeIdsFor(Message.class);
+        disableHttpMethods(Message.class, config, unsupportedActions);
 
         // CONFIGURE CORS MAPPING
         cors.addMapping(config.getBasePath() + "/**")

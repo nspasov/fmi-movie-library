@@ -23,7 +23,7 @@ public class AdminService {
         movie.setDirector(addMovieRequest.getDirector());
         movie.setDescription(addMovieRequest.getDescription());
         movie.setCopies(addMovieRequest.getCopies());
-        movie.setCopiesAvailable(addMovieRequest.getCopiesAvailable());
+        movie.setCopiesAvailable(addMovieRequest.getCopies());
         movie.setCategory(addMovieRequest.getCategory());
         movie.setImg(addMovieRequest.getImg());
 

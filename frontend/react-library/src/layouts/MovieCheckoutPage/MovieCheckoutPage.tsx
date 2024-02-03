@@ -223,7 +223,7 @@ export const MovieCheckoutPage = () => {
             }
         };
         const checkoutResponse = await fetch(url, requestOptions);
-
+        console.log('****CHECKOUT RESPONSE*****', checkoutResponse);
         if(!checkoutResponse.ok){
             throw new Error('Something went wrong!');
         }

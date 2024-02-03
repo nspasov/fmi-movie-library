@@ -1,5 +1,6 @@
 import { useOktaAuth } from "@okta/okta-react";
 import { useState } from "react";
+import AddMovieRequest from "../../../models/AddMovieRequest";
 
 export const AddNewMovie = () => {
 
@@ -17,6 +18,59 @@ export const AddNewMovie = () => {
 
     function categoryField(value: string){
         setCategory(value);
+    }
+
+    async function base64ConversionForImages(e:any){
+        if(e.target.files[0]){
+            getBase64(e.target.files[0]);
+        }
+    }
+
+    function getBase64(file: any){
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+            setSelectedImg(reader.result);
+        };
+        reader.onerror = function (error) {
+            console.log('Error', error);
+        }
+    }
+
+    async function submitNewMovie(){
+        const url = `http://localhost:8080/api/admin/secure/add/movie`;
+
+        if(authState?.isAuthenticated && title !== '' && director !== '' && category !== 'Category' && description !== '' && copies > 0){
+            const movie: AddMovieRequest = new AddMovieRequest(title, director, description, copies, category);
+            movie.img = selectedImg;
+
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(movie)
+            };
+
+            const submitMovieResponse = await fetch(url, requestOptions);
+
+            if(!submitMovieResponse.ok){
+                throw new Error('Something went wrong');
+            }
+
+            setTitle('');
+            setDirector('');
+            setDescription('');
+            setCopies(0);
+            setSelectedImg(null);
+            setDisplayWarning(false);
+            setDisplaySuccess(true);
+
+        }else{
+            setDisplayWarning(true);
+            setDisplaySuccess(false);
+        }
     }
 
 
@@ -65,9 +119,9 @@ export const AddNewMovie = () => {
                             <label className="form-label">Copies</label>
                             <input type="number" className="form-control" name="copies" required onChange={e => setCopies(Number(e.target.value))} value={copies} />
                         </div>
-                        <input type='file' />
+                        <input type='file' onChange={e => base64ConversionForImages(e)}/>
                         <div>
-                            <button type="button" className="btn btn-primary mt-3">
+                            <button type="button" className="btn btn-primary mt-3" onClick={submitNewMovie}>
                                 Add Movie
                             </button>
                         </div>

@@ -1,6 +1,7 @@
 import { useOktaAuth } from "@okta/okta-react"
 import { useState } from "react";
 import { Redirect } from "react-router-dom";
+import { AdminMessages } from "./components/AdminMessages";
 
 export const ManageStorePage = () => {
 
@@ -59,7 +60,7 @@ export const ManageStorePage = () => {
                         {changeQuantityOfMoviesClicked ? <>Change Quantity</> : <></>}
                     </div>
                     <div className="tab-pane fade" id="nav-messages" role="tabpanel" aria-labelledby="nav-messages-tab">
-                        {messagesClicked ? <>Admin Messages</> : <></>}
+                        {messagesClicked ? <AdminMessages/> : <></>}
                     </div>
                 </div>
             </div>

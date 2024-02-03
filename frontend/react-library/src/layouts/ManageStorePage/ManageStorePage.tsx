@@ -2,6 +2,7 @@ import { useOktaAuth } from "@okta/okta-react"
 import { useState } from "react";
 import { Redirect } from "react-router-dom";
 import { AdminMessages } from "./components/AdminMessages";
+import { AddNewMovie } from "./components/AddNewMovie";
 
 export const ManageStorePage = () => {
 
@@ -54,7 +55,7 @@ export const ManageStorePage = () => {
                 </nav>
                 <div className="tab-content" id="nav-tab-content">
                     <div className="tab-pane fade show active" id="nav-add-movie" role="tabpanel" aria-labelledby="nav-add-movie-tab">
-                        Add Movie
+                        <AddNewMovie />
                     </div>
                     <div className="tab-pane fade" id="nav-quantity" role="tabpanel" aria-labelledby="nav-quantity-tab">
                         {changeQuantityOfMoviesClicked ? <>Change Quantity</> : <></>}

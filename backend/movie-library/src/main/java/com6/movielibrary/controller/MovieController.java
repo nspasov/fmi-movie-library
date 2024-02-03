@@ -44,4 +44,11 @@ public class MovieController {
         String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
         return movieService.checkoutMovie(userEmail, movieId);
     }
+
+    @PutMapping("/secure/return")
+    public void returnMovie(@RequestHeader(value = "Authorization") String token,
+                            @RequestParam Long movieId) throws Exception {
+        String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
+        movieService.returnMovie(userEmail, movieId);
+    }
 }

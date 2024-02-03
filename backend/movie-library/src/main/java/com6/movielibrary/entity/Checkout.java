@@ -42,4 +42,8 @@ public class Checkout {
     public String getReturnDate(){
         return this.returnDate;
     }
+
+    public Long getId(){
+        return this.id;
+    }
 }

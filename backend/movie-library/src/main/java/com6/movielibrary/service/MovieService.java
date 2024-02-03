@@ -107,5 +107,21 @@ public class MovieService {
         return shelfCurrentLoansResponses;
     }
 
+    public void returnMovie (String userEmail, Long movieId) throws Exception {
+
+        Optional<Movie> movie = movieRepository.findById(movieId);
+
+        Checkout validateCheckout = checkoutRepository.findByUserEmailAndMovieId(userEmail, movieId);
+
+        if(!movie.isPresent() || validateCheckout == null){
+            throw new Exception("Movie does not exist, or is not checked out by this user");
+        }
+
+        movie.get().setCopiesAvailable(movie.get().getCopiesAvailable() + 1);
+
+        movieRepository.save(movie.get());
+        checkoutRepository.deleteById(validateCheckout.getId());
+    }
+
 
 }

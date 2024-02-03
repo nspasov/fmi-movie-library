@@ -136,6 +136,7 @@ public class MovieService {
                 movie.get().getDescription(),
                 movie.get().getImg()
         );
+        historyRepository.save(history);
     }
 
     public void renewLoan(String userEmail, Long movieId) throws Exception {

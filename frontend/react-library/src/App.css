@@ -48,6 +48,11 @@ background-color: #0e76a8 ;
   height: 384px;
 }
 
+.movie-div {
+  width: 480px;
+  height: 384px;
+}
+
 .inactiveLink {
   pointer-events: none;
   cursor: default;

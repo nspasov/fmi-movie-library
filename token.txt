@@ -1,6 +1,8 @@
 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
-testuser@email.com
-test1234!
+
+u: adminuser@email.com
+u: testuser@email.com
+p: test1234!
 
 
 ************ FIREFOX ENABLE FILEURI.SRICT_ORIGIN_POLICY ***************

@@ -22,6 +22,7 @@ public class MovieController {
     @GetMapping("/secure/currentLoans")
     public List<ShelfCurrentLoansResponse> currentLoans(@RequestHeader(value = "Authorization") String token) throws Exception{
         String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
+        List<ShelfCurrentLoansResponse> test = movieService.currentLoans(userEmail);
         return movieService.currentLoans(userEmail);
     }
 
@@ -50,5 +51,12 @@ public class MovieController {
                             @RequestParam Long movieId) throws Exception {
         String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
         movieService.returnMovie(userEmail, movieId);
+    }
+
+    @PutMapping("secure/renew/loan")
+    public void renewLoan(@RequestHeader(value = "Authorization") String token,
+                          @RequestParam Long movieId) throws Exception {
+        String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
+        movieService.renewLoan(userEmail, movieId);
     }
 }

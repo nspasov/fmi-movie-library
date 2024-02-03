@@ -123,5 +123,23 @@ public class MovieService {
         checkoutRepository.deleteById(validateCheckout.getId());
     }
 
+    public void renewLoan(String userEmail, Long movieId) throws Exception {
+        Checkout validateCheckout = checkoutRepository.findByUserEmailAndMovieId(userEmail, movieId);
+
+        if(validateCheckout == null){
+            throw new Exception(("Movie does not exist, or is not checked out by this user"));
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date d1 = sdf.parse(validateCheckout.getReturnDate());
+        Date d2 = sdf.parse(LocalDate.now().toString());
+
+        if(d1.compareTo(d2) >= 0){
+            validateCheckout.setReturnDate(LocalDate.now().plusDays(7).toString());
+            checkoutRepository.save(validateCheckout);
+        }
+    }
+
 
 }

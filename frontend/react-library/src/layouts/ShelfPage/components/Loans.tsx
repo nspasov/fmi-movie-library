@@ -13,6 +13,7 @@ export const Loans = () => {
 
     const [shelfCurrentLoans, setShelfCurrentLoans] = useState<ShelfCurrentLoans[]>([]);
     const [isLoadingUserLoans, setIsLoadingUserLoans] = useState(true);
+    const [checkout, setCheckout] = useState(false);
 
     useEffect(() => {
 
@@ -35,6 +36,7 @@ export const Loans = () => {
                 }
 
                 const shelfCurrentLoansResponseJson = await shelfCurrentLoansResponse.json();
+                console.log('*** LOANS RESPONSE****', shelfCurrentLoansResponseJson);
                 setShelfCurrentLoans(shelfCurrentLoansResponseJson);
                 setIsLoadingUserLoans(false);
             }
@@ -46,7 +48,7 @@ export const Loans = () => {
         })
         window.scrollTo(0, 0);
 
-    }, [authState]);
+    }, [authState, checkout]);
 
     if (isLoadingUserLoans) {
         return <LoadingSpinner />;
@@ -60,6 +62,44 @@ export const Loans = () => {
                 </p>
             </div>
         );
+    }
+
+    async function returnMovie (movieId: number){
+        const url = `http://localhost:8080/api/movies/secure/return/?movieId=${movieId}`;
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        };
+
+        const returnResponse = await fetch(url, requestOptions);
+        if (!returnResponse.ok) {
+            throw new Error('Something went wrong!');
+        }
+        setCheckout(!checkout);
+    }
+
+    async function renewLoan(movieId: number){
+        const url = `http://localhost:8080/api/movies/secure/renew/loan/?movieId=${movieId}`;
+        
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        };
+
+        const returnResponse = await fetch(url, requestOptions);
+
+        if (!returnResponse.ok){
+            throw new Error('Something went wrong');
+        }
+
+        setCheckout(!checkout);
+
     }
 
     return (
@@ -104,7 +144,7 @@ export const Loans = () => {
                                     </div>
                                 </div>
                                 <hr></hr>
-                                    <LoansModal shelfCurrentLoan={loan} mobile={false} />
+                                    <LoansModal shelfCurrentLoan={loan} mobile={false} returnMovie={returnMovie} renewLoan={renewLoan}/>
                             </div>
                         ))}</h5>
                     </>
@@ -159,7 +199,7 @@ export const Loans = () => {
                                     </div>
                                 </div>
                                 <hr></hr>
-                                <LoansModal shelfCurrentLoan={loan} mobile={true} />
+                                <LoansModal shelfCurrentLoan={loan} mobile={true} returnMovie={returnMovie} renewLoan={renewLoan}/>
                             </div>
                         ))}</h5>
                     </>

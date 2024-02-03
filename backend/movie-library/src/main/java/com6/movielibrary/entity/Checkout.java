@@ -36,11 +36,15 @@ public class Checkout {
     private Long movieId;
 
     public Long getMovieId (){
-        return this.id;
+        return this.movieId;
     }
 
     public String getReturnDate(){
         return this.returnDate;
+    }
+
+    public void setReturnDate(String returnDate){
+        this.returnDate = returnDate;
     }
 
     public Long getId(){

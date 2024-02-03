@@ -1,6 +1,6 @@
 import ShelfCurrentLoans from "../../../models/ShelfCurrentLoans";
 
-export const LoansModal: React.FC<{ shelfCurrentLoan: ShelfCurrentLoans, mobile: boolean }> = (props) => {
+export const LoansModal: React.FC<{ shelfCurrentLoan: ShelfCurrentLoans, mobile: boolean, returnMovie: any, renewLoan: any }> = (props) => {
 
     return (
         <div className="modal fade" id={props.mobile ? `mobilemodal${props.shelfCurrentLoan.movie.id}`
@@ -36,10 +36,14 @@ export const LoansModal: React.FC<{ shelfCurrentLoan: ShelfCurrentLoans, mobile:
                                 {props.shelfCurrentLoan.daysLeft === 0 && <p className="text-success">Due today</p>}
                                 {props.shelfCurrentLoan.daysLeft < 0 && <p className="text-danger">Due {props.shelfCurrentLoan.daysLeft} days ago</p>}
                                 <div className="list-group mt-3">
-                                    <button data-bs-dismiss="modal" className="list-group-item list-group-item-action" aria-current="true">
+                                    <button onClick={() => props.returnMovie(props.shelfCurrentLoan.movie.id)} data-bs-dismiss="modal" className="list-group-item list-group-item-action" aria-current="true">
                                         Return movie
                                     </button>
-                                    <button data-bs-dismiss="modal" className={props.shelfCurrentLoan.daysLeft < 0 ? "list-group-item list-group-item-action inactive" : "list-group-item list-group-item-action"}>
+                                    <button onClick={props.shelfCurrentLoan.daysLeft < 0 ?
+                                        (event) => event.preventDefault()
+                                        :
+                                        () => props.renewLoan(props.shelfCurrentLoan.movie.id)
+                                        } data-bs-dismiss="modal" className={props.shelfCurrentLoan.daysLeft < 0 ? "list-group-item list-group-item-action inactive" : "list-group-item list-group-item-action"}>
                                         {props.shelfCurrentLoan.daysLeft < 0 ? "Late dues can not be renewed" : "Renew loan for 7 days"}
                                     </button>
                                 </div>

@@ -33,6 +33,14 @@ public class Movie {
         return this.id;
     }
 
+    public String getTitle() { return this.title; }
+
+    public String getDescription() { return this.description; }
+
+    public String getDirector() { return this.director; }
+
+    public String getImg() { return this.img; }
+
     public int setCopiesAvailable(int copiesAvailable){
         return this.copiesAvailable = copiesAvailable;
     }

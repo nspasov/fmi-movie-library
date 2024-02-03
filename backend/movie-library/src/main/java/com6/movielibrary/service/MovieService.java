@@ -1,8 +1,10 @@
 package com6.movielibrary.service;
 
 import com6.movielibrary.dao.CheckoutRepository;
+import com6.movielibrary.dao.HistoryRepository;
 import com6.movielibrary.dao.MovieRepository;
 import com6.movielibrary.entity.Checkout;
+import com6.movielibrary.entity.History;
 import com6.movielibrary.entity.Movie;
 import com6.movielibrary.responsemodels.ShelfCurrentLoansResponse;
 import org.hibernate.annotations.Check;
@@ -24,11 +26,14 @@ public class MovieService {
     private MovieRepository movieRepository;
     private CheckoutRepository checkoutRepository;
 
+    private HistoryRepository historyRepository;
 
-    public MovieService(MovieRepository movieRepository, CheckoutRepository checkoutRepository){
+
+    public MovieService(MovieRepository movieRepository, CheckoutRepository checkoutRepository, HistoryRepository historyRepository){
 
         this.movieRepository = movieRepository;
         this.checkoutRepository = checkoutRepository;
+        this.historyRepository = historyRepository;
 
     }
 
@@ -121,6 +126,16 @@ public class MovieService {
 
         movieRepository.save(movie.get());
         checkoutRepository.deleteById(validateCheckout.getId());
+
+        History history = new History(
+                userEmail,
+                validateCheckout.getCheckoutDate(),
+                LocalDate.now().toString(),
+                movie.get().getTitle(),
+                movie.get().getDirector(),
+                movie.get().getDescription(),
+                movie.get().getImg()
+        );
     }
 
     public void renewLoan(String userEmail, Long movieId) throws Exception {
@@ -140,6 +155,8 @@ public class MovieService {
             checkoutRepository.save(validateCheckout);
         }
     }
+
+
 
 
 }

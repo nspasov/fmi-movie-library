@@ -47,6 +47,8 @@ public class Checkout {
         this.returnDate = returnDate;
     }
 
+    public String getCheckoutDate() {return this.checkoutDate;}
+
     public Long getId(){
         return this.id;
     }

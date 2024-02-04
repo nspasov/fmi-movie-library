@@ -65,7 +65,7 @@ public class AdminController {
         }
 
         adminService.deleteMovie(movieId);
-        
+
     }
 
 }

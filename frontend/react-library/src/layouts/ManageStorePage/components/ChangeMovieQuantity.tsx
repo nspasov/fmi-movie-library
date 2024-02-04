@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import MovieModel from "../../../models/MovieModel"
+import { useOktaAuth } from "@okta/okta-react";
 
 export const ChangeMovieQuantity: React.FC<{movie: MovieModel}> = (props, key) => {
+
+    const {authState} = useOktaAuth();
 
     const [quantity, setQuantity] = useState(0);
     const [remaining, setRemaining] = useState(0);
@@ -14,6 +17,72 @@ export const ChangeMovieQuantity: React.FC<{movie: MovieModel}> = (props, key) =
 
         fetchMovieInState();
     }, []);
+
+    // async function increaseQuantity() {
+
+    //     const url = `http://localhost:8080/api/admin/secure/increase/movie/quantity/?movieId=${props.movie?.id}`;
+
+    //     const requestOptions = {
+    //         method: 'PUT',
+    //         headers: {
+    //             Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+    //             'Content-Type': 'application/json'
+    //         }
+    //     };
+
+    //     const quantityUpdateResponse = await fetch(url, requestOptions);
+
+    //     if(!quantityUpdateResponse.ok){
+    //         throw new Error('Something went wrong!');
+    //     }
+
+    //     setQuantity(quantity+1);
+    //     setRemaining(remaining+1);
+    // }
+
+    // async function decreaseQuantity(){
+    //     const url = `http://localhost:8080/api/admin/secure/decrease/movie/quantity/?movieId=${props.movie?.id}`;
+
+    //     const requestOptions = {
+    //         method: 'PUT',
+    //         headers: {
+    //             Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+    //             'Content-Type': 'application/json'
+    //         }
+    //     };
+
+    //     const quantityUpdateResponse = await fetch(url, requestOptions);
+
+    //     if(!quantityUpdateResponse.ok){
+    //         throw new Error('Something went wrong!');
+    //     }
+
+    //     setQuantity(quantity-1);
+    //     setRemaining(remaining-1);
+    // }
+
+    const adjustQuantity = async (action: string) => {
+
+        const url = `http://localhost:8080/api/admin/secure/${action}/movie/quantity/?movieId=${props.movie?.id}`;
+
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        };
+
+        const quantityUpdateResponse = await fetch(url, requestOptions);
+
+        if(!quantityUpdateResponse.ok){
+            throw new Error('Something went wrong!');
+        }
+
+        setQuantity(action === 'increase' ? quantity + 1 : quantity - 1);
+        setRemaining(action === 'increase' ? remaining + 1 : quantity - 1);
+
+    }
 
     return (
         <div className="card mt-3 shadow p-3 mb-3 bg-body rounded">
@@ -46,10 +115,10 @@ export const ChangeMovieQuantity: React.FC<{movie: MovieModel}> = (props, key) =
                         <button className="m-1 btn btn-md btn-danger">Delete</button>
                     </div>
                 </div>
-                <button className="m1 btn btn-md main-color text-white">
+                <button onClick={() => adjustQuantity('increase')} className="m1 btn btn-md main-color text-white">
                     Increase Quantity
                 </button>
-                <button className="m1 btn btn-md btn-warning">
+                <button onClick={() => adjustQuantity('decrease')} className="m1 btn btn-md btn-warning">
                     Decrease Quantity
                 </button>
             </div>

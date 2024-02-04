@@ -14,6 +14,8 @@ export const ChangeMoviesQuantity = () => {
     const [totalAmount, setTotalAmount] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
 
+    const [movieDeleteClicked, setMovieDeleteClicked] = useState(false);
+
     useEffect(() => {
         const fetchMovies = async () => {
             const url: string = `http://localhost:8080/api/movies?page=${currentPage - 1}&size=${moviesPerPage}`;
@@ -55,13 +57,17 @@ export const ChangeMoviesQuantity = () => {
             setIsLoading(false);
             setHttpError(err.message);
         });
-    }, [currentPage]);
+    }, [currentPage, movieDeleteClicked]);
 
     const lastMovieIndex: number = currentPage * moviesPerPage;
     const firstMovieIndex: number = lastMovieIndex - moviesPerPage;
     let lastItem = moviesPerPage * currentPage <= totalAmount ? moviesPerPage * currentPage : totalAmount;
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+    const deleteMovie = () => {
+        setMovieDeleteClicked(!movieDeleteClicked);
+    }
 
     if (isLoading) {
         return (
@@ -89,7 +95,7 @@ export const ChangeMoviesQuantity = () => {
                             {firstMovieIndex + 1} to {lastItem} of {totalAmount} items:
                         </p>
                         {movies.map(movie => (
-                            <ChangeMovieQuantity movie={movie} key={movie.id} />
+                            <ChangeMovieQuantity movie={movie} key={movie.id} deleteMovie={deleteMovie}/>
                         ))}
                     </>
                     :

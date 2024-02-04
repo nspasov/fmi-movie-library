@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MovieModel from "../../../models/MovieModel"
 import { useOktaAuth } from "@okta/okta-react";
 
-export const ChangeMovieQuantity: React.FC<{movie: MovieModel}> = (props, key) => {
+export const ChangeMovieQuantity: React.FC<{movie: MovieModel, deleteMovie: any}> = (props, key) => {
 
     const {authState} = useOktaAuth();
 
@@ -18,48 +18,25 @@ export const ChangeMovieQuantity: React.FC<{movie: MovieModel}> = (props, key) =
         fetchMovieInState();
     }, []);
 
-    // async function increaseQuantity() {
+    const deleteMovie = async () => {
+        const url = `http://localhost:8080/api/admin/secure/delete/movie/?movieId=${props.movie?.id}`;
 
-    //     const url = `http://localhost:8080/api/admin/secure/increase/movie/quantity/?movieId=${props.movie?.id}`;
+        const requestOptions = {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        };
 
-    //     const requestOptions = {
-    //         method: 'PUT',
-    //         headers: {
-    //             Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
-    //             'Content-Type': 'application/json'
-    //         }
-    //     };
+        const deleteResponse = await fetch(url, requestOptions);
 
-    //     const quantityUpdateResponse = await fetch(url, requestOptions);
+        if(!deleteResponse.ok){
+            throw new Error('Something went wrong!');
+        }
 
-    //     if(!quantityUpdateResponse.ok){
-    //         throw new Error('Something went wrong!');
-    //     }
-
-    //     setQuantity(quantity+1);
-    //     setRemaining(remaining+1);
-    // }
-
-    // async function decreaseQuantity(){
-    //     const url = `http://localhost:8080/api/admin/secure/decrease/movie/quantity/?movieId=${props.movie?.id}`;
-
-    //     const requestOptions = {
-    //         method: 'PUT',
-    //         headers: {
-    //             Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
-    //             'Content-Type': 'application/json'
-    //         }
-    //     };
-
-    //     const quantityUpdateResponse = await fetch(url, requestOptions);
-
-    //     if(!quantityUpdateResponse.ok){
-    //         throw new Error('Something went wrong!');
-    //     }
-
-    //     setQuantity(quantity-1);
-    //     setRemaining(remaining-1);
-    // }
+        props.deleteMovie();
+    }
 
     const adjustQuantity = async (action: string) => {
 
@@ -112,7 +89,7 @@ export const ChangeMovieQuantity: React.FC<{movie: MovieModel}> = (props, key) =
                 </div>
                 <div className="mt-3 col-md-1">
                     <div className="d-flex justify-content-start">
-                        <button className="m-1 btn btn-md btn-danger">Delete</button>
+                        <button className="m-1 btn btn-md btn-danger" onClick={deleteMovie}>Delete</button>
                     </div>
                 </div>
                 <button onClick={() => adjustQuantity('increase')} className="m1 btn btn-md main-color text-white">

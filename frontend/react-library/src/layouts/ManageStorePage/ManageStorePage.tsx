@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Redirect } from "react-router-dom";
 import { AdminMessages } from "./components/AdminMessages";
 import { AddNewMovie } from "./components/AddNewMovie";
+import { ChangeMoviesQuantity } from "./components/ChangeMoviesQuantity";
 
 export const ManageStorePage = () => {
 
@@ -58,7 +59,7 @@ export const ManageStorePage = () => {
                         <AddNewMovie />
                     </div>
                     <div className="tab-pane fade" id="nav-quantity" role="tabpanel" aria-labelledby="nav-quantity-tab">
-                        {changeQuantityOfMoviesClicked ? <>Change Quantity</> : <></>}
+                        {changeQuantityOfMoviesClicked ? <ChangeMoviesQuantity/> : <></>}
                     </div>
                     <div className="tab-pane fade" id="nav-messages" role="tabpanel" aria-labelledby="nav-messages-tab">
                         {messagesClicked ? <AdminMessages/> : <></>}

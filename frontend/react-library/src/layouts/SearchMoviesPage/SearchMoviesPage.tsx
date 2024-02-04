@@ -9,7 +9,7 @@ export const SearchMoviesPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [httpError, setHttpError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const [moviesPerPage, setMoviesPerPage] = useState(1);
+    const [moviesPerPage, setMoviesPerPage] = useState(5);
     const [totalAmount, setTotalAmount] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [search, setSearch] = useState('');

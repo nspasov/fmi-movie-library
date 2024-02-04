@@ -6,6 +6,8 @@ import com6.movielibrary.requestModels.AddMovieRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 public class AdminService {
@@ -14,6 +16,19 @@ public class AdminService {
 
     public AdminService(MovieRepository movieRepository){
         this.movieRepository = movieRepository;
+    }
+
+    public void increaseMovieQuantity(Long movieId) throws Exception {
+        Optional<Movie> movie = movieRepository.findById(movieId);
+
+        if(!movie.isPresent()){
+            throw new Exception("Movie not found!");
+        }
+
+        movie.get().setCopiesAvailable(movie.get().getCopiesAvailable()+1);
+        movie.get().setCopies(movie.get().getCopies()+1);
+
+        movieRepository.save(movie.get());
     }
 
     public void postMovie(AddMovieRequest addMovieRequest){

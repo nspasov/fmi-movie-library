@@ -31,6 +31,23 @@ public class AdminService {
         movieRepository.save(movie.get());
     }
 
+    public void decreaseMovieQuantity(Long movieId) throws Exception {
+        Optional<Movie> movie = movieRepository.findById(movieId);
+
+        if(!movie.isPresent()){
+            throw new Exception("Movie not found!");
+        }
+
+        if(movie.get().getCopiesAvailable() <= 0 || movie.get().getCopies() <= 0){
+            throw new Exception("Can not decrease further");
+        }
+
+        movie.get().setCopiesAvailable(movie.get().getCopiesAvailable()-1);
+        movie.get().setCopies(movie.get().getCopies()-1);
+
+        movieRepository.save(movie.get());
+    }
+
     public void postMovie(AddMovieRequest addMovieRequest){
         Movie movie = new Movie();
 

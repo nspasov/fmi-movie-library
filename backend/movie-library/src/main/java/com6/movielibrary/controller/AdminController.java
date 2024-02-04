@@ -28,6 +28,18 @@ public class AdminController {
         adminService.increaseMovieQuantity(movieId);
     }
 
+    @PutMapping("/secure/decrease/movie/quantity")
+    public void decreaseMovieQuantity(@RequestHeader(value="Authorization") String token,
+                                      @RequestParam Long movieId) throws Exception {
+        String admin = ExtractJWT.payloadJWTExtraction(token, "\"userType\"");
+
+        if(admin == null || !admin.equals("admin")) {
+            throw new Exception("Administration page only");
+        }
+
+        adminService.decreaseMovieQuantity(movieId);
+    }
+
     @PostMapping("/secure/add/movie")
     public void postMovie(@RequestHeader(value="Authorization") String token,
                           @RequestBody AddMovieRequest addMovieRequest) throws Exception {

@@ -1,6 +1,8 @@
 package com6.movielibrary.service;
 
+import com6.movielibrary.dao.CheckoutRepository;
 import com6.movielibrary.dao.MovieRepository;
+import com6.movielibrary.dao.ReviewRepository;
 import com6.movielibrary.entity.Movie;
 import com6.movielibrary.requestModels.AddMovieRequest;
 import org.springframework.stereotype.Service;
@@ -13,9 +15,13 @@ import java.util.Optional;
 public class AdminService {
 
     private MovieRepository movieRepository;
+    private ReviewRepository reviewRepository;
+    private CheckoutRepository checkoutRepository;
 
-    public AdminService(MovieRepository movieRepository){
+    public AdminService(MovieRepository movieRepository, ReviewRepository reviewRepository, CheckoutRepository checkoutRepository){
         this.movieRepository = movieRepository;
+        this.reviewRepository = reviewRepository;
+        this.checkoutRepository = checkoutRepository;
     }
 
     public void increaseMovieQuantity(Long movieId) throws Exception {
@@ -60,6 +66,19 @@ public class AdminService {
         movie.setImg(addMovieRequest.getImg());
 
         movieRepository.save(movie);
+    }
+
+    public void deleteMovie(Long movieId) throws Exception {
+
+        Optional<Movie> movie = movieRepository.findById(movieId);
+
+        if(!movie.isPresent()){
+            throw new Exception("Movie not found!");
+        }
+
+        reviewRepository.deleteAllByMovieId(movieId);
+        checkoutRepository.deleteAllByMovieId(movieId);
+        movieRepository.delete(movie.get());
     }
 
 }

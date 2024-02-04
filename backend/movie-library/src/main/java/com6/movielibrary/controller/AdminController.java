@@ -54,4 +54,18 @@ public class AdminController {
 
     }
 
+    @DeleteMapping("/secure/delete/movie")
+    public void deleteMovie(@RequestHeader(value="Authorization") String token,
+                            @RequestParam Long movieId) throws Exception {
+
+        String admin = ExtractJWT.payloadJWTExtraction(token, "\"userType\"");
+
+        if(admin == null || !admin.equals("admin")){
+            throw new Exception("Only admins allowed!");
+        }
+
+        adminService.deleteMovie(movieId);
+        
+    }
+
 }
